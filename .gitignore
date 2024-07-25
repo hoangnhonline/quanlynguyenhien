@@ -1,0 +1,8 @@
+/public/uploads
+/storage
+/vendor
+/config/database.php
+.env
+bootstrap/
+/node_modules
+/.idea
