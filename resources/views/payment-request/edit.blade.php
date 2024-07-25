@@ -128,7 +128,7 @@
                 <input type="text" name="date_pay" class="form-control datepicker" value="{{ old('date_pay', $date_pay) }}" autocomplete="off">
               </div>
               <div class="form-group col-md-6 col-xs-6">
-                <label for="email">PTT CODE <span style="color: red">(KHÔNG CẦN ghi PTT, PTH, PTX... nhiều code cách nhau bằng dấu , )</span></label>
+                <label for="email">NH CODE <span style="color: red">(KHÔNG CẦN ghi NH, PTH, PTX... nhiều code cách nhau bằng dấu , )</span></label>
                 <input type="text" name="booking_id" class="form-control" value="{{ old('booking_id', $detail->booking_id) }}" autocomplete="off">
               </div>
               <div class="form-group col-md-12 col-xs-12">

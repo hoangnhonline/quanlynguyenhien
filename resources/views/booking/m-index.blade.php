@@ -3,25 +3,23 @@
 <div class="content-wrapper">
 
 <!-- Content Header (Page header) -->
-<section class="content-header" style="padding-top: 10px;">
+<section class="content-header" style="position: relative;">
   <h1 style="text-transform: uppercase;">
-    TOUR
+    QUẢN LÝ TOUR
   </h1>
-
+  <a href="{{ route('booking.create') }}" class="btn btn-info btn-sm" style="position: absolute;top:5px; right: 5px;">Tạo mới</a>
 </section>
 
 <!-- Main content -->
 <section class="content">
 
   <div class="row">
-    <div class="col-md-12">
-      <div id="content_alert"></div>
+    <div class="col-md-12">   
       @if(Session::has('message'))
       <p class="alert alert-info" >{{ Session::get('message') }}</p>
-      @endif
-      @if(Auth::user()->hotline_team == 0)
-      <a href="{{ route('booking.create', ['type' => $type]) }}" class="btn btn-info btn-sm" style="margin-bottom:5px">Tạo mới</a>
-      @endif
+      @endif    
+      
+  
       <div class="panel panel-default">
         <div class="panel-body">
 
@@ -29,10 +27,10 @@
             <input type="hidden" name="type" value="{{ $type }}">
              <div class="row">
                <div class="form-group col-xs-6"  style="padding-right: 0px;">
-                <input type="text" class="form-control" autocomplete="off" name="id_search" value="{{ $arrSearch['id_search'] }}" placeholder="PTT ID" >
+                <input type="text" class="form-control" autocomplete="off" name="id_search" value="{{ $arrSearch['id_search'] }}" placeholder="BOOKING ID" >
               </div>
               <div class="form-group col-xs-6" style="padding-left: 5px;">
-                <input type="text" class="form-control" name="phone" value="{{ $arrSearch['phone'] }}" placeholder="Số ĐT">
+                <input type="text" class="form-control" name="phone" autocomplete="off" value="{{ $arrSearch['phone'] }}" placeholder="Số ĐT">
               </div>
              </div>
             <div class="row">
@@ -40,42 +38,42 @@
                 <input type="text" class="form-control daterange" autocomplete="off" name="range_date" value="{{ $arrSearch['range_date'] ?? "" }}" />
             </div>
             </div>
-            @if(Auth::user()->role == 1 && !Auth::user()->view_only)
-            <div class="form-group">
+          <div class="row">
+            <div class="form-group col-xs-6">
               <select class="form-control select2" name="user_id" id="user_id">
-                <option value="">-Sales-</option>
+                <option value="">-Đối tác-</option>
                 @foreach($listUser as $user)
-                <option value="{{ $user->id }}" {{ $arrSearch['user_id'] == $user->id ? "selected" : "" }}>{{ $user->name }} - {{ $user->phone }}</option>
+                <option value="{{ $user->id }}" {{ $arrSearch['user_id'] == $user->id ? "selected" : "" }}>{{ $user->name }}</option>
                 @endforeach
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group col-xs-6" style="padding-left: 0px;">
               <select class="form-control select2" name="nguoi_thu_tien" id="nguoi_thu_tien">
-                <option value="">--Thu tiền--</option>
+                <option value="">-Người thu tiền-</option>
                 @foreach($collecterList as $col)
                 <option value="{{ $col->id }}" {{ $arrSearch['nguoi_thu_tien'] == $col->id ? "selected" : "" }}>{{ $col->name }}</option>
                 @endforeach
               </select>
             </div>
-            @endif
+        </div>
 
-            @if($arrSearch['tour_id'] != 4)
+         
             <div class="row" style="font-size: 12px;">
-               <div class="form-group col-xs-3">
-              <input type="checkbox" name="tour_type[]" id="tour_type_1" {{ in_array(1, $arrSearch['tour_type']) ? "checked" : "" }} value="1">
-              <label for="tour_type_1">GHÉP({{ $ghep }})</label>
+               <div class="form-group col-xs-4">
+              <input type="checkbox" name="tour_type[]" id="tour_type_1" {{ in_array(1, $arrSearch['tour_type']) ? "checked" : "" }} value="1"><br>
+              <label for="tour_type_1">GHÉP ({{ $ghep }} NL)</label>
             </div>
             <div class="form-group col-xs-4">
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" name="tour_type[]" id="tour_type_2" {{ in_array(2, $arrSearch['tour_type']) ? "checked" : "" }} value="2">
-              <label for="tour_type_2">VIP({{ $vip }}-{{ $tong_vip }}NL)&nbsp;&nbsp;&nbsp;&nbsp;</label>
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" name="tour_type[]" id="tour_type_2" {{ in_array(2, $arrSearch['tour_type']) ? "checked" : "" }} value="2"><br>
+              <label for="tour_type_2">VIP ({{ $vip }}-{{ $tong_vip }}NL)</label>
             </div>
-            <div class="form-group col-xs-5" style="border-right: 1px solid #9ba39d">
-              &nbsp;&nbsp;&nbsp;<input type="checkbox" name="tour_type[]" id="tour_type_3" {{ in_array(3, $arrSearch['tour_type']) ? "checked" : "" }} value="3">
-              <label for="tour_type_3">THUÊ CANO({{ $thue }})&nbsp;&nbsp;&nbsp;&nbsp;</label>
+            <div class="form-group col-xs-4" style="border-right: 1px solid #9ba39d">
+              &nbsp;&nbsp;&nbsp;<input type="checkbox" name="tour_type[]" id="tour_type_3" {{ in_array(3, $arrSearch['tour_type']) ? "checked" : "" }} value="3"><br>
+              <label for="tour_type_3">THUÊ CANO ({{ $thue }})</label>
             </div>
             </div>
-            @endif
-            <div class="row" style="font-size: 12px;">
+           
+            <div class="row">
               <div class="form-group col-xs-4">
                 <input type="checkbox" name="status[]" id="status_1" {{ in_array(1, $arrSearch['status']) ? "checked" : "" }} value="1">
                 <label for="status_1">MỚI</label>
@@ -88,20 +86,15 @@
                 <input type="checkbox" name="status[]" id="status_3" {{ in_array(3, $arrSearch['status']) ? "checked" : "" }} value="3">
                 <label for="status_3">HỦY</label>
               </div>
-              @if($arrSearch['tour_id'] != 4)
+              
               <div class="form-group col-xs-4">
                 <input type="checkbox" name="no_cab" id="no_cab" {{ $arrSearch['no_cab'] == 1 ? "checked" : "" }} value="1">
-                <label for="no_cab">Không cáp</label>
+                <label for="no_cab" style="color: red">Không cáp</label>
               </div>
               <div class="form-group col-xs-4">
                 <input type="checkbox" name="no_meals" id="no_meals" {{ $arrSearch['no_meals'] == 1 ? "checked" : "" }} value="1">
-                <label for="no_meals">Không ăn</label>
-              </div>
-              @endif
-              <div class="form-group col-xs-4">
-                <input type="checkbox"name="hh0" id="hh0" {{ $arrSearch['hh0'] == 1 ? "checked" : "" }} value="1">
-                <label for="hh0">Chưa HH</label>
-              </div>
+                <label for="no_meals" style="color: red">Không ăn</label>
+              </div>             
             </div>
             <button type="submit" class="btn btn-info btn-sm">Lọc</button>
             <button type="button" id="btnReset" class="btn btn-danger btn-sm">Reset</button>
@@ -118,10 +111,8 @@
                 <th class="text-center">Ăn TE</th>
                 <th class="text-center">Cáp NL</th>
                 <th class="text-center">Cáp TE</th>
-                <th class="text-right">Thực thu</th>
-                <th class="text-right">HDV thu</th>
-                <th class="text-right">Tổng cọc</th>
-                <th class="text-right">HH sales</th>
+        
+                
               </tr>
               <tr>
                 <td class="text-center">{{ number_format($items->count()) }}</td>
@@ -130,11 +121,8 @@
                 <td class="text-center">{{ number_format($tong_phan_an ) }}</td>
                 <td class="text-center">{{ number_format($tong_phan_an_te ) }}</td>
                 <td class="text-center">{{ number_format($cap_nl ) }}</td>
-                <td class="text-center">{{ number_format($cap_te ) }}</td>
-                <td class="text-right">{{ number_format($tong_thuc_thu ) }}</td>
-                <td class="text-right">{{ number_format($tong_hdv_thu ) }}</td>
-                <td class="text-right">{{ number_format($tong_coc ) }}</td>
-                <td class="text-right">{{ number_format($tong_hoa_hong_sales ) }}</td>
+                <td class="text-center">{{ number_format($cap_te ) }}</td>          
+                
               </tr>
           </table>
         </div>
@@ -153,22 +141,11 @@
                 ?>
                 <li id="row-{{ $item->id }}" class="booking" style="padding: 10px;background-color: #fff; font-size:15px;margin-bottom: 10px; border-radius: 5px; color: #2c323f"  data-id="{{ $item->id }}" data-date="{{ $item->use_date }}">
                 <span class="label label-sm label-danger" id="error_unc_{{ $item->id }}"></span>
-                <!-- <div class="dropdown" style="position: absolute;right: 10px;top:10px">
-                  <button class="dropdown-toggle" type="button" data-toggle="dropdown">
-
-
-                                            <i class="  glyphicon glyphicon-menu-hamburger"></i>
-                                        </button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">HTML</a></li>
-                    <li><a href="#">CSS</a></li>
-                    <li><a href="#">JavaScript</a></li>
-                  </ul>
-                </div>       -->
+                
                     @php $arrEdit = array_merge(['id' => $item->id], $arrSearch) @endphp
 
                     <span style="color: red">
-                        PTT{{ $item->id }}</span>
+                        NH{{ $item->id }}</span>
                         @if($item->status == 1)
                     <span class="label label-info">MỚI</span>
                     @elseif($item->status == 2)
@@ -221,75 +198,25 @@
                     <i class="glyphicon glyphicon-briefcase"></i> {{ $meals }}
                     <br>
 
-                    <i class="glyphicon glyphicon-usd"></i> {{ number_format($item->total_price) }} @if($item->tien_coc > 0)- Cọc: {{ number_format($item->tien_coc) }} @endif @if($item->discount > 0)- Giảm: <span style="color: red;font-weight: bold;">{{ number_format($item->discount) }}
+                    <i class="glyphicon glyphicon-usd"></i> {{ number_format($item->total_price) }}
                   </span>
-                    @endif
-                    @if($item->extra_fee > 0)
-                    <br>
-                    Phụ thu: {{ number_format($item->extra_fee) }}
-                    @endif
-
-                    @if(!$item->hoa_hong_sales && $item->status != 3)
-
-                      @else
-                       HH: {{ number_format($item->hoa_hong_sales) }}
-                      @endif
-
-                    <br>
-                    Thu: {{ number_format($item->con_lai) }}
+                    
                     @if($item->ko_cap_treo)
                     <br><span style="color: red">KHÔNG CÁP</span>
-                    @endif
-                    @if($item->notes)
-                    <br>
-                    @if(!$item->hoa_hong_sales && $item->status != 3 && Auth::user()->role == 1 && !Auth::user()->view_only)
-
-                    @else
-                     {{ number_format($item->hoa_hong_sales) }}
-                    @endif
+                    @endif                  
                     <span style="color:red">{!! nl2br($item->notes) !!}</span>
-                    @endif
-                    <!-- @if($item->export == 1)
-                    <span class="label label-default">Đã gửi</span>
-                    @else
-                    <span class="label label-danger">Chưa gửi</span>
-                    @endif
-                    <br><br>
-                    @if(Auth::user()->role == 1 && !Auth::user()->view_only && $item->export == 2)
-                    <input type="checkbox" name="" class="change_status" value="1" data-id="{{ $item->id }}">
-                    <br>
-                    @endif  -->
-                    @if($item->tour_id == 4)
-                    <div class="clearfix"></div>
-                      <!-- @if($item->mail_hotel == 0)
-                      <a href="{{ route('mail-preview', ['id' => $item->id, 'tour_id' => 4]) }}" class="btn btn-sm btn-success" >
-                        <i class="  glyphicon glyphicon-envelope"></i> Book Tour
-                      </a>
-                      @else
-                      <p class="label label-info" style="margin-bottom: 5px; clear:both">Đã mail John</p>
-                      @endif -->
-                      <div class="clearfix"></div>
-                    @endif
-
-                  @if($item->maxis)
-                    @foreach($item->maxis as $maxis)
-                    <p class="img-maxi" style="background-color: pink; color: #000;margin-top: 5px;padding: 0px 5px; margin-bottom: 5px;"
-                    data-image="{{ !empty($maxis->maxi) ? $maxis->maxi->thumbnail->image_url : '' }}"
-                    >{{ !empty($maxis->maxi) ? $maxis->maxi->name : '' }}</p>
-                    @endforeach
-                  @endif
+                            
+                  
+                
                     <div class="clearfix"></div>
                     @if(Auth::user()->role == 1 && !Auth::user()->view_only && $item->status == 1 && $allowEdit)
                   <a style="float:right; margin-left: 2px" onclick="return callDelete('{{ $item->title }}','{{ route( 'booking.destroy', [ 'id' => $item->id ]) }}');" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
                   @endif
-                    @if($allowEdit)
+                  
                    <a style="float:right; margin-left: 2px" href="{{ route( 'booking.edit', $arrEdit ) }}" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-pencil"></span></a>
 
-                    <a style="float:right; margin-left: 2px" href="{{ route( 'booking-payment.index', ['booking_id' => $item->id] ) }}" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-usd"></span></a>
-                    @endif
-                      <a style="float: left;" target="_blank" href="{{ route('history.booking', ['id' => $item->id]) }}">Xem lịch sử</a> - <a href="{{ route('view-pdf', ['id' => $item->id])}}" target="_blank">PDF</a>
-                      <br>
-                  <a style="font-size: 15px" target="_blank" href="https://plantotravel.vn/booking/{{ Helper::mahoa('mahoa', $item->id) }}">Danh sách</a>
+               
+                
                       <div style="clear: both;"></div>
                 </li>
               @endforeach

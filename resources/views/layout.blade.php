@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>Hệ thống quản lý booking - Plan To Travel</title>
+        <title>Hệ thống quản lý booking - Du lịch Nguyễn Hiền</title>
         <meta property="og:type" content="website" />
         <meta property="og:image" content="images/logo-plan-to-travel.png" />
         <meta name="robots" content="noindex" />
@@ -89,23 +89,15 @@
             }
         </style>
     </head>
-    <body class="skin-blue sidebar-mini  @if(Auth::user()->id != 510) sidebar-collapse @endif">
+    <body class="skin-blue sidebar-mini">
         <div class="wrapper">
 
-            @if(Auth::user()->id == 23)
-                @include('partials.header-car')
-                @include('partials.sidebar-car')
-            @elseif(Auth::user()->id == 510)
-                @include('partials.header-hr')
-                @include('partials.sidebar-hr')
-            @else
+            
                 @include('partials.header')
-                @if($city_id_default == 1)
+               
                  @include('partials.sidebar')
-                @else
-                    @include('partials.sidebar-other')
-                @endif
-            @endif
+                
+       
             @yield('content')
             <div style="display: none;" id="box_uploadimages">
                 <div class="upload_wrapper block_auto">
@@ -128,7 +120,7 @@
             <!-- /.content-wrapper -->
             <footer class="main-footer">
                 <div class="pull-right hidden-xs"><b>Version</b> 2.3.9</div>
-                <strong>Copyright &copy; 2022 <a href="mailto:contact@plantotravel.vn">contact@plantotravel.vn</a>.</strong> All rights reserved.
+                <strong>Copyright &copy; 2024 <a href="mailto:canonguyenhien@gmail.com">canonguyenhien@gmail.com</a>.</strong> All rights reserved.
             </footer>
 <div class="modal fade" id="confirmNopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -161,10 +153,7 @@
         <input type="hidden" id="route-change-value" value="{{ route('change-value') }}" />
         <input type="hidden" id="get-child-route" value="{{ route('get-child') }}" />
         <input type="hidden" id="upload_url" value="{{ config('plantotravel.upload_url') }}" />
-        <input type="hidden" id="route_change_value_by_column" value="{{ route('change-value-by-column-general') }}" />
-        <input type="hidden" id="route_booking_get_content_nop" value="{{ route('booking.get-content-nop') }}" />
-        <input type="hidden" id="route_booking_get_content_nop_dt" value="{{ route('booking.get-content-nop-dt') }}" />
-        <input type="hidden" id="route_booking_get_confirm_nop" value="{{ route('booking.get-confirm-nop') }}" />
+        <input type="hidden" id="route_change_value_by_column" value="{{ route('change-value-by-column-general') }}" />       
         <!-- ./wrapper -->
 
         <!-- jQuery 2.2.3 -->
@@ -259,32 +248,9 @@
             });
 
             $(document).ready(function () {
-                $.ajax({
-                    url: "{{ route('customer.noti') }}",
-                    type: "GET",
-                    data : {
-                        id : {{ Auth::user()->id }}
-                    },
-                    success: function (data) {
-                        $("#content_alert").append(data);
-                    },
-                });
+                
                 $('#contact_date').click();
-                // $.ajax({
-                //     url: "{{ route('booking.not-export') }}",
-                //     type: "GET",
-                //     success: function (data) {
-                //         $("#content_alert").append(data);
-                //     },
-                // });
-
-                $.ajax({
-                    url: "{{ route('payment-request.urgent') }}",
-                    type: "GET",
-                    success: function (data) {
-                        $("#content_alert").append(data);
-                    },
-                });
+              
 
                 $("input.number").number(true, 0);
                 $("img.lazy").lazyload();
@@ -299,43 +265,10 @@
                     }
                 });
 
-                $(".sendNoti").click(function () {
-                    var customer_id = $(this).data("customer-id");
-                    var order_id = $(this).data("order-id");
-                    var notiType = $(this).data("type");
-                    $("#customer_id_noti").val(customer_id);
-                    $("#order_id_noti").val(order_id);
-                    $("#notifiModal").modal("show");
-                    $("#notifiModal  #type").val(notiType);
-                    processNotiType(notiType);
-                });
-                $("#notifiModal  #type").change(function () {
-                    processNotiType($(this).val());
-                });
-                CKEDITOR.editorConfig = function (config) {
-                    config.toolbarGroups = [
-                        { name: "clipboard", groups: ["clipboard", "undo"] },
-                        { name: "editing", groups: ["find", "selection", "spellchecker", "editing"] },
-                    ];
-
-                    config.removeButtons = "Underline,Subscript,Superscript";
-                };
-                if ($("#contentNoti").length == 1) {
-                    var editor2 = CKEDITOR.replace("contentNoti", {
-                        language: "vi",
-                        height: 100,
-                        toolbarGroups: [{ name: "basicstyles", groups: ["basicstyles", "cleanup"] }, { name: "links", groups: ["links"] }, "/"],
-                    });
-                }
+              
+              
             });
 
-            function processNotiType(type) {
-                if (type == 1) {
-                    $("#notifiModal #url-km").show();
-                } else {
-                    $("#notifiModal #url-km").hide();
-                }
-            }
         </script>
         <style type="text/css">
             .pagination > .active > a,
@@ -351,90 +284,16 @@
         @yield('js')
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#btnContentNop').click(function(){
-                    var obj = $(this);
-                    var str_id = '';
-                    $('.check_one:checked').each(function(){
-                        str_id += $(this).val() + ',';
-                    });
-                    if(str_id != ''){
-                      $.ajax({
-                        url : $('#route_booking_get_confirm_nop').val(),
-                        type : 'GET',
-                        data : {
-                          str_id : str_id
-                        },
-                        success: function(data){
-                          $('#loadConfirm').html(data);
-                          $('#confirmNopModal').modal('show');
-                        }
-                      });
-                    }
-
-                 }); //btnContentNop
-                $('#btnContentNopDT').click(function(){
-                    var obj = $(this);
-                    var str_id = '';
-                    $('.check_one:checked').each(function(){
-                        str_id += $(this).val() + ',';
-                    });
-                    if(str_id != ''){
-                      $.ajax({
-                        url : $('#route_booking_get_confirm_nop').val(),
-                        type : 'GET',
-                        data : {
-                          str_id : str_id,
-                          dt : 1
-                        },
-                        success: function(data){
-                          $('#loadConfirm').html(data);
-                          $('#confirmNopModal').modal('show');
-                        }
-                      });
-                    }
-
-                 }); //btnContentNop
-                  $('#btnYcNop').click(function(){
-                      var obj = $(this);
-                      var str_id = '';
-                      $('.check_one:checked').each(function(){
-                          str_id += $(this).val() + ',';
-                      });
-                      var url = '';
-                      if($('#dt').val() == 1){
-                        url = $('#route_booking_get_content_nop_dt').val();
-                      }else{
-                        url = $('#route_booking_get_content_nop').val();
-                      }
-                      if(str_id != ''){
-                        $.ajax({
-                          url : url,
-                          type : 'GET',
-                          data : {
-                            str_id : str_id,
-                            content : $('#content_nop').val()
-                          },
-                          success: function(data){
-                            $('#noi_dung_nop').html(data);
-                            $('#btnYcNop').hide();
-                          }
-                        });
-                      }
-
-                   }); //btnYcNop
+               
                 $(".datepicker").datepicker({
                     dateFormat: "dd/mm/yy",
                     changeMonth: true,
                     changeYear: true,
                     yearRange: '-100:+2'
                 });
-                // $(".datetimepicker").datetimepicker({
-                //     sideBySide : true,
-                //     format : "DD/MM/YYYY H:m",
-                // });
+              
                 $(".daterange").daterangepicker({
-                    // startDate: moment().startOf('month'),
-                    // endDate: moment().endOf('month'),
+                   
                     linkedCalendars: false,
                     showDropdowns: true,
                     alwaysShowCalendars: true,
@@ -489,19 +348,7 @@
                         }
                     }
                 });
-                $('input[name=city_default]').change(function(){
-                    var obj = $(this);
-                    $.ajax({
-                        url  : "{{ route('set-city-id-default')}}",
-                        type : 'GET',
-                        data : {
-                            city_id : obj.val()
-                        },
-                        success : function(){
-                            window.location.reload();
-                        }
-                    });
-                });
+                
             });
         </script>
     </body>

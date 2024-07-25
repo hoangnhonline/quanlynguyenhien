@@ -34,7 +34,7 @@ class AccessController extends Controller
             $arr['name'] = $route_name;
             SystemRoutes::create($arr);
         }
-        dd('1111');
+      
         return view('access.index', compact( 'items', 'name', 'id', 'all'));
     }
     public function ajaxList(Request $request){

@@ -40,7 +40,7 @@
             </div>
             <input type="hidden" name="type" value="{{ $type }}">
             <div class="form-group">
-              <input type="text" class="form-control" autocomplete="off" name="id_search" placeholder="PTT ID" value="{{ $arrSearch['id_search'] }}" style="width: 70px">
+              <input type="text" class="form-control" autocomplete="off" name="id_search" placeholder="NH ID" value="{{ $arrSearch['id_search'] }}" style="width: 70px">
             </div>
             <div class="form-group">
               <input type="text" class="form-control datepicker" autocomplete="off" name="created_at" placeholder="Ngày đặt" value="{{ $arrSearch['created_at'] }}" style="width: 120px">
@@ -64,7 +64,7 @@
             @if(Auth::user()->role == 1 && !Auth::user()->view_only)
             <div class="form-group">
               <select class="form-control select2" name="user_id" id="user_id">
-                <option value="">--Sales--</option>
+                <option value="">--Đối tác--</option>
                 @foreach($listUser as $user)
                 <option value="{{ $user->id }}" {{ $arrSearch['user_id'] == $user->id ? "selected" : "" }}>{{ $user->name }}</option>
                 @endforeach
@@ -302,7 +302,7 @@
               <th style="width: 1%"></th>
               <th width="200">Tên KH</th>
               <th style="width: 200px">Nơi đón</th>
-              <th class="text-center" width="80">NL/TE/EB</th><th class="text-right" width="100">Tổng tiền/Cọc<br> HH Sales</th>
+              <th class="text-center" width="80">NL/TE/EB</th><th class="text-right" width="100">Tổng tiền/Cọc<br> HH Đối tác</th>
               <th class="text-right" width="140" >Thực thu</th>
               <th class="text-center" width="60">Ngày đi</th>
               <th class="text-center" width="90">HDV</th>
@@ -324,7 +324,7 @@
                   <br>{{ date('d/m H:i', strtotime($item->created_at)) }}
                   <span class="label label-sm label-danger" id="error_unc_{{ $item->id }}"></span>
                 </td>
-                <td style="text-align: center;white-space: nowrap; line-height: 30px;"><strong style="color: red;">PTT{{ $item->id }}</strong>
+                <td style="text-align: center;white-space: nowrap; line-height: 30px;"><strong style="color: red;">NH{{ $item->id }}</strong>
                   <br>
                   @if($item->status == 1)
                   <span class="label label-info">MỚI</span>

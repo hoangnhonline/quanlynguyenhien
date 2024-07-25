@@ -6,7 +6,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1 style="text-transform: uppercase;">
-            Đặt tour : Mã QR <span style="color: red">PTT{{ $detail->id }}</span>
+            Đặt tour : Mã QR <span style="color: red">NH{{ $detail->id }}</span>
         </h1>
     </section>
 

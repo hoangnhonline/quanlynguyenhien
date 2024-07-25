@@ -13,7 +13,6 @@ use App\Models\TaskDetail;
 use App\Models\Account;
 use App\Models\Ctv;
 use App\Models\TourSystem;
-use App\Models\GrandworldSchedule;
 use Jenssegers\Agent\Agent;
 use App\Models\Partner;
 use App\User;
@@ -44,29 +43,13 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function dashboard(Request $request){
-
-       if(Auth::user()->id == 510){
-            return redirect()->route('task-detail.index');
-        } // HR
+    public function dashboard(Request $request){      
         $user_id = Auth::user()->id;
-        //dd(Auth::user()->is_tour);
-        if( $user_id == 21 || $user_id == 22 || $user_id == 23 || (Auth::user()->is_tour == 1 && !in_array($user_id,[32, 33, 41, 58, 65, 76, 125])) ){
-
-            return redirect()->route('booking.index');
-        }
-        //ve cap treo Thuy Le
-        if(Auth::user()->role == 5){
-            return redirect()->route('ticket.manage');
-        }
-       // dd(in_array($user_id, [32, 33, 41, 58, 65, 76, 125]));
-        if(in_array($user_id, [32, 33, 41, 58, 65, 76, 125])){
-          return redirect()->route('media.diem-danh');
-        }
-        $rsTour = Booking::whereRaw('(use_date = "'
-            .date('Y-m-d').'" OR checkin = "'.date('Y-m-d').'")')
+       
+        $rsTour = Booking::whereRaw('use_date = "'
+            .date('Y-m-d').'" ')
             ->where('status', 1);
-        $totalGrand = GrandworldSchedule::where('date_book', date('Y-m-d'))->where('status', 1)->sum('adults');
+        $totalGrand = 0;
 
         if(Auth::user()->role != 1){
             $rsTour->where('user_id', $user_id);
@@ -85,7 +68,7 @@ class HomeController extends Controller
                 $allTicket[] = $tour;
             }
         }
-        $taskCount = TaskDetail::where('task_date', date('Y-m-d'))->get()->count();
+        $taskCount = 0;
         $nvCount = Account::where('is_staff', 1)->get()->count();
 
 
@@ -280,274 +263,5 @@ class HomeController extends Controller
        // dd($arrTourByCate);
         return view($view, compact('allTour', 'allHotel', 'allTicket', 'allCar', 'taskCount', 'nvCount','month', 'year', 'time_type', 'arrSearch', 'arrResult', 'totalGrand', 'arrByDay', 'maxDay', 'level', 'tourSystem', 'arrTourByCate'));
     }
-    public function mailPreview(Request $request){
-
-        $id = $request->id;
-        $tour_id = $request->tour_id ?? null;
-
-        $detail = Booking::find($id);
-        if($detail->mail_hotel == 1){
-            die('Đã gửi mail book phòng');
-        }
-        $userDetail = User::find($detail->user_id);
-        if($tour_id == 4){
-            return view('mail-preview.tour', compact('detail', 'userDetail'));
-        }else{
-            $detailHotel = Hotels::find($detail->hotel_id);
-
-            if($detail->hotel_id == 31 || $detail->hotel_id == 35){
-                return view('mail-preview.hotel-vin', compact('detail', 'detailHotel', 'userDetail'));
-            }else{
-                return view('mail-preview.hotel', compact('detail', 'detailHotel', 'userDetail'));
-            }
-        }
-
-
-
-    }
-    public function mailConfirm(Request $request){
-
-        $id = $request->id;
-        $detail = Booking::find($id);
-        if($detail->mail_customer == 1){
-            die('Đã gửi mail cho khách');
-        }
-        $detailHotel = Hotels::find($detail->hotel_id);
-        $userDetail = User::find($detail->user_id);
-
-        return view('mail-confirm', compact('detail', 'detailHotel', 'userDetail'));
-
-    }
-
-    public function saveHoaHong(Request $request){
-        $user = Auth::user();
-        $id = $request->id;
-        $hoa_hong_sales = $request->hoa_hong_sales;
-        $hoa_hong_sales = (int) str_replace(',', '', $hoa_hong_sales);
-        // if(strlen($hoa_hong_sales) <= 4){
-        //     $hoa_hong_sales = $hoa_hong_sales."000";
-        // }
-        $detail = Booking::find($id);
-
-        // luu log
-        $oldData = ['hoa_hong_sales' => $detail->hoa_hong_sales, 'status' => $detail->status];
-        $dataArr = ['hoa_hong_sales' => $hoa_hong_sales, 'status' => 2];
-        $contentDiff = array_diff_assoc($dataArr, $oldData);
-
-        if(!empty($contentDiff)){
-            $oldContent = [];
-
-            foreach($contentDiff as $k => $v){
-                $oldContent[$k] = $oldData[$k];
-            }
-            $rsLog = BookingLogs::create([
-                'booking_id' =>  $id,
-                'content' =>json_encode(['old' => $oldContent, 'new' => $contentDiff]),
-                'action' => 3, // ajax hoa hong
-                'user_id' => Auth::user()->id
-            ]);
-            // push notification
-           // dd($rs);
-           // $userIdPush = Helper::getUserIdPushNoti($id, 1);
-          // dd($userIdPush);
-            // foreach($userIdPush as $idPush){
-            //     if($idPush > 0){
-            //         UserNotification::create([
-            //             'title' => 'Hoa hồng PTT'.$id.' vừa được '. $user->name." cập nhật",
-            //             'content' => Helper::parseLog($rsLog),
-            //             'user_id' => $idPush,
-            //             'booking_id' => $id,
-            //             'date_use' => $detail->use_date,
-            //             //'data' => json_encode($dataArr),
-            //             'type' => 2, // tinh hoa hong
-            //             'is_read' => 0
-            //         ]);
-            //     }
-            // }
-        }
-        // cap nhat
-        $detail->update($dataArr);
-    }
-    public function bookPhong(Request $request){
-        $id = $request->id;
-        $detail = Booking::find($id);
-         if($detail->mail_hotel == 1){
-            die('Đã gửi mail book phòng');
-        }
-        //dd($detail->rooms);
-
-        $detailHotel = Hotels::find($detail->hotel_id);
-        $userDetail = User::find($detail->user_id);
-        if($detail->hotel_book > 0){
-            $detailBook = Partner::find($detail->hotel_book);
-            $tmpEmail = explode(';', $detailBook->email);
-        }else{
-            $tmpEmail = explode(';', $detailHotel->email);
-        }
-        $emailArr = (array) $tmpEmail[0];
-        $emailCC = array_slice($tmpEmail, 1);
-        $arrCtvPhung = [305, 306, 307, 308, 309, 310, 311, 312, 313];
-        if($detail->ctv_id > 0){
-            $detailCtv = Ctv::find($detail->ctv_id);
-            // cc cho email ctv
-            if(in_array($detailCtv->id, $arrCtvPhung)){
-                $emailCC[] = 'phungtravel1988@gmail.com';
-                $emailCC[] = $detailCtv->email;
-            }else{
-                $emailCC[] = $detailCtv->email;
-            }
-        }
-       // dd($emailCC);
-         // cc cho email chinh
-        $emailCC[] = $userDetail->email;
-        // neu email booking ko trung với email user thì cc email trong booking
-        // if($detail->email != $userDetail->email){
-        //     $emailCC[] = $detail->email;
-        // }
-
-        if($userDetail->email == 'phungtravel1988@gmail.com'){
-            $emailCC[] = "tunganphung88@gmail.com";
-        }
-
-        $emailCC[] = 'acc@plantotravel.vn';
-
-        if ($detail->hotel_id == 31 || $detail->hotel_id == 35) {
-            Mail::send('mail.mail-hotel-vin',
-            [
-                'detail'             => $detail,
-                'detailHotel' => $detailHotel
-            ],
-            function($message) use ($detail, $emailArr, $emailCC, $detailHotel) {
-
-                 $title = $detail->name." - ";
-                $title .= date('d/m/Y', strtotime($detail->checkin))." - ".date('d/m/Y', strtotime($detail->checkout))." - VIN 5 SAO PHÚ QUÔC";
-
-
-
-                $message->subject($title);
-                $message->to($emailArr);
-                $message->cc($emailCC);
-                //$message->replyTo('', $dataArr['full_name']);
-                $message->from('booking@plantotravel.vn', 'Plan To Travel');
-                $message->sender('booking@plantotravel.vn', 'Plan To Travel');
-        });
-        }else{
-            Mail::send('mail.mail-hotel',
-            [
-                'detail'             => $detail,
-                'detailHotel' => $detailHotel,
-                'userDetail' => $userDetail
-            ],
-            function($message) use ($detail, $emailArr, $emailCC, $detailHotel, $userDetail) {
-                //if($detailHotel->id == 23 || $detailHotel->id == 39){
-                    $title = $detailHotel->name. "/".$detail->name."/".date('d.m', strtotime($detail->checkin))."-".date('d.m.y', strtotime($detail->checkout))."-".$detail->phone;
-                // }else{
-                //     $title = 'Plan To Travel gửi yêu cầu đặt phòng ';
-                //     $title .= date('d/m/Y', strtotime($detail->checkin))." - ".$detail->name." - ".$detail->phone;
-                // }
-
-                $message->subject($title);
-                $message->to($emailArr);
-                $message->cc($emailCC);
-                //$message->replyTo('', $dataArr['full_name']);
-                $message->from('booking@plantotravel.vn', 'Plan To Travel');
-                $message->sender('booking@plantotravel.vn', 'Plan To Travel');
-        });
-        }
-
-        $detail->update(['mail_hotel' => 1]);
-        Session::flash('message', 'Gửi mail book phòng thành công');
-        return redirect()->route('booking-hotel.index', ['book_date' => date('d/m/Y', strtotime($detail->book_date)), 'hotel_id' => $detail->hotel_id]);
-    }
-    public function bookTourCauMuc(Request $request){
-        $id = $request->id;
-        $detail = Booking::find($id);
-         if($detail->mail_hotel == 1){
-            die('Đã gửi mail book tour');
-        }
-        //dd($detail->rooms);
-
-        $userDetail = User::find($detail->user_id);
-
-        $emailArr = ['salemanager.johnstours@phuquoctrip.com'];
-
-        $emailCC[] = $userDetail->email;
-
-        $emailCC[] = 'acc@plantotravel.vn';
-
-        $emailCC[] = 'nhungoc@plantotravel.vn';
-
-            Mail::send('mail.tour-cau-muc',
-            [
-                'detail'             => $detail,
-                'userDetail' => $userDetail
-            ],
-            function($message) use ($detail, $emailArr, $emailCC, $userDetail) {
-
-                $title = 'Plan To Travel gửi yêu cầu đặt tour câu mực ';
-                $title .= date('d/m/Y', strtotime($detail->use_date))." - ".$detail->name." - ".$detail->phone;
-
-                $message->subject($title);
-                $message->to($emailArr);
-                $message->cc($emailCC);
-                //$message->replyTo('', $dataArr['full_name']);
-                $message->from('booking@plantotravel.vn', 'Plan To Travel');
-                $message->sender('booking@plantotravel.vn', 'Plan To Travel');
-        });
-
-
-        $detail->update(['mail_hotel' => 1]);
-        Session::flash('message', 'Gửi mail book tour câu mực thành công');
-        return redirect()->route('booking.index', ['type'=> 1, 'use_date_from' => date('d/m/Y', strtotime($detail->use_date)), 'tour_id' => 4]);
-    }
-    public function confirmPhong(Request $request){
-        $id = $request->id;
-        $detail = Booking::find($id);
-         if($detail->mail_customer == 1){
-            die('Đã gửi mail book phòng');
-        }
-        //dd($detail->rooms);
-
-        $detailHotel = Hotels::find($detail->hotel_id);
-        $userDetail = User::find($detail->user_id);
-        //$emailArr = [$detail->email, $userDetail->email];
-        $emailArr = [$detail->email, $userDetail->email];
-        //dd($userDetail);
-        //return view('mail', compact('detail'));
-        Mail::send('confirm',
-            [
-                'detail'             => $detail,
-                'detailHotel' => $detailHotel
-            ],
-            function($message) use ($detail, $detailHotel, $emailArr) {
-                $title = 'Plan To Travel gửi xác nhận đặt phòng tại '.$detailHotel->name." ngày ";
-                $title .= date('d/m/Y', strtotime($detail->checkin));
-
-                $message->subject($title);
-                $message->to($emailArr);
-                //$message->replyTo('', $dataArr['full_name']);
-                $message->from('booking@plantotravel.vn', 'Plan To Travel');
-                $message->sender('booking@plantotravel.vn', 'Plan To Travel');
-        });
-        $detail->update(['mail_customer' => 1]);
-        Session::flash('message', 'Gửi mail book phòng thành công');
-        return redirect()->route('booking-hotel.index', ['book_date' => date('d/m/Y', strtotime($detail->book_date))]);
-    }
-
-    public function testMail(){
-        $detail = 1;
-        Mail::send('test-mail',
-            [                   
-                'detail'             => 1,                
-            ],
-            function($message) use ($detail) {   
-                $title = 'Test mail Plan To Travel';                        
-
-                $message->subject($title);
-                $message->to(['ceo@plantotravel.vn']);
-                //$message->replyTo('', $dataArr['full_name']);
-                $message->from('booking@plantotravel.vn', 'Plan To Travel');
-                $message->sender('booking@plantotravel.vn', 'Plan To Travel');
-        });
-    }
+    
 }

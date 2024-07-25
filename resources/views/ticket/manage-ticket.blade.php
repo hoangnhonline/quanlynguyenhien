@@ -122,7 +122,7 @@
           <div class="table-responsive">
           <table class="table table-bordered" id="table-list-data">
             <tr>
-              <th style="width: 1%; white-space: nowrap;">PTT CODE<br>Ngày book</th>
+              <th style="width: 1%; white-space: nowrap;">NH CODE<br>Ngày book</th>
               <th width="200">Tên KH / Điện thoại</th>
               <th width="1%">UNC</th>
               <th width="1%" style="white-space: nowrap;">Ngày giao</th>

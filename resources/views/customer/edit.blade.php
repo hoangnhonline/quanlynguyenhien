@@ -78,7 +78,7 @@
                                                             <a href="{{ route('booking.edit', $booking->id) }}" target="_blank">
                                                                 @switch($booking->type)
                                                                     @case(1)
-                                                                        PTT{{ $booking->id }}
+                                                                        NH{{ $booking->id }}
                                                                         @break
                                                                     @case(2)
                                                                         PTH{{ $booking->id }}

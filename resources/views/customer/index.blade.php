@@ -240,7 +240,7 @@
                                                         @switch($booking->type)
                                                             @case(1)
                                                                 <a href="{{ route('booking.edit', $booking->id) }}" target="_blank"
-                                                                   class="label label-danger">PTT{{$booking->id}}</a>
+                                                                   class="label label-danger">NH{{$booking->id}}</a>
                                                                 @break
                                                             @case(2)
                                                                 <a href="{{ route('booking-hotel.edit', $booking->id) }}" target="_blank"

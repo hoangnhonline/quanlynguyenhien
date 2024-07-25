@@ -129,8 +129,8 @@
               </div>
               <div class="row">
                 <div class="form-group col-md-6 col-xs-12">
-                  <label for="email">PTT CODE <span style="color: red">(code1, code2...)</span></label>
-                  <input type="text" name="booking_id" placeholder="PTT Code" class="form-control" value="{{ old('booking_id') }}" autocomplete="off">
+                  <label for="email">NH CODE <span style="color: red">(code1, code2...)</span></label>
+                  <input type="text" name="booking_id" placeholder="NH Code" class="form-control" value="{{ old('booking_id') }}" autocomplete="off">
                 </div>              
                 <div class="tinh-toan" >
                   <div class="form-group col-md-6  col-xs-6">

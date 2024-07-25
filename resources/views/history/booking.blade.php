@@ -4,7 +4,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Lịch sử cập nhật <span style="color: red">PTT{{ $detailBooking->id }}</span>
+    Lịch sử cập nhật <span style="color: red">NH{{ $detailBooking->id }}</span>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>

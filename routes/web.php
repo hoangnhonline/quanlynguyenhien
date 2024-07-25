@@ -750,4 +750,23 @@ Route::group([
         Route::get('{id}/history-destroy', ['as' => 'maxi.history.destroy', 'uses' => 'MaxiHistoryController@destroy']);
 
     });
+    Route::group(['prefix' => 'doi-tac'], function () {
+        Route::get('/', ['as' => 'doi-tac.index', 'uses' => 'DoiTacController@index']);
+        Route::get('/doi-tac', ['as' => 'doi-tac.doi-tac', 'uses' => 'DoiTacController@doitac']);
+        Route::get('/change-password', ['as' => 'doi-tac.change-pass', 'uses' => 'DoiTacController@changePass']);
+        Route::post('/store-password', ['as' => 'doi-tac.store-pass', 'uses' => 'DoiTacController@storeNewPass']);
+        Route::get('{id}/kpi', ['as' => 'doi-tac.kpi', 'uses' => 'DoiTacController@kpi']);
+        Route::post('/store-kpi', ['as' => 'doi-tac.store-kpi', 'uses' => 'DoiTacController@storeKpi']);
+        Route::get('/update-status/{status}/{id}', ['as' => 'doi-tac.update-status', 'uses' => 'DoiTacController@updateStatus']);
+        Route::get('/create', ['as' => 'doi-tac.create', 'uses' => 'DoiTacController@create']);
+        Route::get('/create-tx', ['as' => 'doi-tac.create-tx', 'uses' => 'DoiTacController@createTx']);
+        Route::get('/create-dt', ['as' => 'doi-tac.create-dt', 'uses' => 'DoiTacController@createDt']);
+        Route::post('/store', ['as' => 'doi-tac.store', 'uses' => 'DoiTacController@store']);
+        Route::post('/store-tx', ['as' => 'doi-tac.store-tx', 'uses' => 'DoiTacController@storeTx']);
+        Route::get('{id}/edit',   ['as' => 'doi-tac.edit', 'uses' => 'DoiTacController@edit']);
+        Route::post('/update', ['as' => 'doi-tac.update', 'uses' => 'DoiTacController@update']);
+        Route::get('{id}/destroy', ['as' => 'doi-tac.destroy', 'uses' => 'DoiTacController@destroy']);
+        Route::post('/ajaxSave', ['as' => 'doi-tac.ajax-save', 'uses' => 'DoiTacController@ajaxSave']);
+        Route::get('/ajax-list', ['as' => 'doi-tac.ajax-list', 'uses' => 'DoiTacController@ajaxList']);
+    });
 });

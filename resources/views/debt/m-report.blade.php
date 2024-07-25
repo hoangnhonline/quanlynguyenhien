@@ -32,7 +32,7 @@
           <form class="form-inline" role="form" method="GET" action="{{ route('debt.report') }}" id="searchForm" style="margin-bottom: 0px;">
             <input type="hidden" name="type" value="{{ $type }}">
             <div class="form-group">
-              <input type="text" class="form-control" autocomplete="off" name="id_search" placeholder="PTT ID" value="{{ $arrSearch['id_search'] }}" style="width: 70px">
+              <input type="text" class="form-control" autocomplete="off" name="id_search" placeholder="NH ID" value="{{ $arrSearch['id_search'] }}" style="width: 70px">
             </div>
             <div class="form-group">
               <select class="form-control select2" name="tour_id" id="tour_id">
@@ -263,7 +263,7 @@
 
                 </td>
                 <td style="text-align: center;white-space: nowrap; line-height: 30px;">
-                  <strong style="color: red;">PTT{{ $item->id }}</strong>
+                  <strong style="color: red;">NH{{ $item->id }}</strong>
                 </td>
                 <td style="position: relative; line-height: 30px;">
 

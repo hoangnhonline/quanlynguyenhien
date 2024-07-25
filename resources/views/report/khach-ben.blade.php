@@ -128,7 +128,7 @@
                     <label class="label label-danger label-sm">CÔNG NỢ</label>
                     @endif
                     <br>
-                    <span style="color:#06b7a4; text-transform: uppercase;"><span style="color: #f39c12;font-weight: bold">PTT{{ $item->id }}</span> - {{ $item->name }} </span> 
+                    <span style="color:#06b7a4; text-transform: uppercase;"><span style="color: #f39c12;font-weight: bold">NH{{ $item->id }}</span> - {{ $item->name }} </span> 
                      @if($item->tour_id == 3)
                   <br><label class="label label-warning">Rạch Vẹm</label>
                   @elseif($item->tour_id == 4)
@@ -250,7 +250,7 @@
           <!-- general form elements -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">UPLOAD UNC PTT<span id="id_load_unc"></span></h3>
+              <h3 class="box-title">UPLOAD UNC NH<span id="id_load_unc"></span></h3>
             </div>
             <!-- /.box-header -->               
               {!! csrf_field() !!}
@@ -340,7 +340,7 @@ $totalLevel = count($arrLevel);
     $(document).on('click', '.btnThuTien', function(){      
       var id = $(this).data('id');
       var name = $(this).data('name');
-      if(confirm('Chắc chắn đã thu tiền tour PTT'+ id + '-' + name)){
+      if(confirm('Chắc chắn đã thu tiền tour NH'+ id + '-' + name)){
         $.ajax({
             url: "{{ route('report.thu-tien') }}",
             type: "GET",            

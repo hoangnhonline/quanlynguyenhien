@@ -48,7 +48,7 @@
                         Mã booking
                     </td>
                     <td>
-                        <span style="font-weight: bold; font-size: 20px; color: red;">@if($detail->type == 1) PTT{{$detail->id}} @elseif($detail->type == 4) PTX{{$detail->id}}  @elseif($detail->type == 5) PTC{{$detail->id}} @endif</span>
+                        <span style="font-weight: bold; font-size: 20px; color: red;">@if($detail->type == 1) NH{{$detail->id}} @elseif($detail->type == 4) PTX{{$detail->id}}  @elseif($detail->type == 5) PTC{{$detail->id}} @endif</span>
                     </td>
                 </tr>
                 @if ( $detail->type == 1 || $detail->type == 4)

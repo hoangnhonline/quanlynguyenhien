@@ -26,7 +26,7 @@
                     <label class="label label-danger label-sm">CÔNG NỢ</label>
                     @endif
                     <br>
-                    <span style="color:#06b7a4; text-transform: uppercase;"><span style="color: #f39c12;font-weight: bold">PTT{{ $item->id }}</span> - {{ $item->name }} </span> 
+                    <span style="color:#06b7a4; text-transform: uppercase;"><span style="color: #f39c12;font-weight: bold">NH{{ $item->id }}</span> - {{ $item->name }} </span> 
                    @if($item->tour_id)
                   <br><label class="label label-success">{{ $tourSystemName[$item->tour_id]['name'] }}</label>
                   @endif

@@ -1661,8 +1661,7 @@ class ReportController extends Controller
             if($item->type > 1){
                 if($item->user->level){
                     $item->update(['level' => $item->user->level]);
-                }
-              //  dd('1111');
+                }             
             }
             $arrLevel[$item->level] = $item->level;
             // doanh thu tổng theo từng loại

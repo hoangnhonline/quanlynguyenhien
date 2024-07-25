@@ -15,7 +15,7 @@ use App\Models\MocKpi;
 use App\Models\Hotels;
 use Helper, File, Session, Auth;
 
-class AccountController extends Controller
+class DoiTacController extends Controller
 {
     /**
     * Display a listing of the resource.
@@ -34,62 +34,6 @@ class AccountController extends Controller
         return redirect()->route('staff.editPass', $id);
     }
 
-    public function kpi(Request $request){
-        $id = $request->id;
-        $detail = Account::findOrFail($id);
-        $month = $request->month ?? null;
-        $year = $request->year ?? null;
-        $tourSystem =  TourSystem::where('status', 1)->get();
-        $kpiArr = [];
-        if($month > 0 && $year > 0){
-            $kpiList = MocKpi::where(['year_apply' => $year, 'month_apply' => $month, 'user_id' => $id])->get();
-            if($kpiList->count() > 0){
-                foreach($kpiList as $kpi){
-                    $kpiArr[$kpi->tour_id] = $kpi->amount;
-                }
-            }
-        }
-        //dd($kpiArr);
-        return view('account.kpi', compact('detail', 'id', 'tourSystem', 'month', 'year', 'kpiArr'));
-    }
-    public function storeKpi(Request $request){
-        $dataArr = $request->all();
-        $model = Account::find($dataArr['id']);
-        $this->validate($request,[
-            'month_apply' => 'required',
-            'year_apply' => 'required',
-        ],
-        [
-            'month_apply.required' => 'Bạn chưa chọn tháng',
-            'year_apply.required' => 'Bạn chưa chọn năm'
-        ]);
-        $user_id = $dataArr['id'];
-        $model = Account::find($dataArr['id']);
-
-        foreach($dataArr['tour_id'] as $k => $tour_id){
-            if($dataArr['amount'][$k] > 0){
-                $amount = str_replace(",", "", $dataArr['amount'][$k]);
-                $arr = [
-                    'month_apply' => $dataArr['month_apply'],
-                    'year_apply' => $dataArr['year_apply'],
-                    'tour_id' => $tour_id,
-                    'user_id' => $user_id
-                ];
-
-                $check = MocKpi::where($arr)->first();
-                if($check){
-                    $check->update(['amount' => $amount]);
-                }else{
-                    $arr['amount'] = $amount;
-                    MocKpi::create($arr);
-                }
-            }
-        }
-
-        Session::flash('message', 'Lưu mốc KPI thành công');
-
-        return redirect()->route('account.kpi', ['id' => $dataArr['id'], 'month' => $dataArr['month_apply'], 'year' => $dataArr['year_apply']]);
-    }
     public function index(Request $request)
     {
         if( Auth::user()->role > 2 ){
@@ -110,17 +54,9 @@ class AccountController extends Controller
             $query->where('email', $email);
         }       
         $items = $query->orderBy('id', 'desc')->paginate(1000);
-        return view('account.index', compact('items', 'email', 'phone', 'status'));
+        return view('doi-tac.index', compact('items', 'email', 'phone', 'status'));
     }
-    public function create()
-    {
-        if(Auth::user()->role > 2){
-            return redirect()->route('home');
-        }
-        $modList = Account::where(['role' => 2, 'status' => 1])->get();
-
-        return view('account.create', compact('modList'));
-    }
+   
     public function ajaxSave(Request $request)
     {
         $dataArr = $request->all();
@@ -158,26 +94,18 @@ class AccountController extends Controller
 
         return view('location.ajax-list', compact( 'tagArr', 'id_selected'));
     }
-    public function createTx()
-    {
-        if(Auth::user()->role > 2){
-            return redirect()->route('home');
-        }
-        $modList = Account::where(['role' => 2, 'status' => 1])->get();
-
-        return view('account.create-tx', compact('modList'));
-    }
-    public function createDt()
+    
+    public function create()
     {
         if(Auth::user()->role > 2){
             return redirect()->route('home');
         }
 
 
-        return view('account.create-dt');
+        return view('doi-tac.create');
     }
     public function changePass(){
-        return view('account.change-pass');
+        return view('doi-tac.change-pass');
     }
 
     public function storeNewPass(Request $request){
@@ -217,7 +145,7 @@ class AccountController extends Controller
         $detail->save();
         Session::flash('message', 'Đổi mật khẩu thành công');
 
-        return redirect()->route('account.change-pass');
+        return redirect()->route('doi-tac.change-pass');
 
     }
     public function storeTx(Request $request)
@@ -253,7 +181,7 @@ class AccountController extends Controller
         $rs = Account::create($dataArr);
         /*
         if ( $rs->id > 0 ){
-            Mail::send('account.mail', ['fullname' => $request->fullname, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
+            Mail::send('doi-tac.mail', ['fullname' => $request->fullname, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
                 $message->from( config('mail.username'), config('mail.name'));
 
                 $message->to( $request->email, $request->fullname )->subject('Mật khẩu đăng nhập hệ thống');
@@ -262,7 +190,7 @@ class AccountController extends Controller
 
         Session::flash('message', 'Tạo mới thành công');
 
-        return redirect()->route('account.index');
+        return redirect()->route('doi-tac.index');
     }
     public function store(Request $request)
     {
@@ -304,7 +232,7 @@ class AccountController extends Controller
         $rs = Account::create($dataArr);
         /*
         if ( $rs->id > 0 ){
-            Mail::send('account.mail', ['fullname' => $request->fullname, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
+            Mail::send('doi-tac.mail', ['fullname' => $request->fullname, 'password' => $tmpPassword, 'email' => $request->email], function ($message) use ($request) {
                 $message->from( config('mail.username'), config('mail.name'));
 
                 $message->to( $request->email, $request->fullname )->subject('Mật khẩu đăng nhập hệ thống');
@@ -313,7 +241,7 @@ class AccountController extends Controller
 
         Session::flash('message', 'Tạo mới thành công');
 
-        return redirect()->route('account.index', ['city_id' => $dataArr['city_id']]);
+        return redirect()->route('doi-tac.index', ['city_id' => $dataArr['city_id']]);
     }
     public function destroy($id)
     {
@@ -326,7 +254,7 @@ class AccountController extends Controller
 
         // redirect
         Session::flash('message', 'Xóa thành công');
-        return redirect()->route('account.index');
+        return redirect()->route('doi-tac.index');
     }
     public function edit($id)
     {
@@ -341,7 +269,7 @@ class AccountController extends Controller
             $arrKpi[$kpi->tour_id] = $kpi->amount;
         }
 
-        return view('account.edit', compact( 'detail', 'tourSystem', 'arrKpi'));
+        return view('doi-tac.edit', compact( 'detail', 'tourSystem', 'arrKpi'));
     }
     public function update(Request $request)
     {
@@ -389,7 +317,7 @@ class AccountController extends Controller
 
         Session::flash('message', 'Cập nhật thành công');
 
-        return redirect()->route('account.index');
+        return redirect()->route('doi-tac.index');
     }
     public function updateStatus(Request $request)
     {
@@ -406,7 +334,7 @@ class AccountController extends Controller
         $mess = $request->status == 1 ? "Mở khóa thành công" : "Khóa thành công";
         Session::flash('message', $mess);
 
-        return redirect()->route('account.index');
+        return redirect()->route('doi-tac.index');
     }
     public function doitac(Request $request)
     {   
@@ -436,6 +364,6 @@ class AccountController extends Controller
         //dd($role);
         $hotelList = Hotels::where('status', 1)->get();
         $items = $query->orderBy('id', 'desc')->paginate(1000);
-        return view('account.doi-tac', compact('items', 'email', 'user_type', 'level', 'city_id', 'status', 'hotelList'));
+        return view('doi-tac.doi-tac', compact('items', 'email', 'user_type', 'level', 'city_id', 'status', 'hotelList'));
     }
 }

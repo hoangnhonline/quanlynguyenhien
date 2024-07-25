@@ -28,7 +28,7 @@
                         CODE
                     </td>
                     <td>
-                        PTT{{ $detail->id }}
+                        NH{{ $detail->id }}
                     </td>
                 </tr>
                 <tr>

@@ -53,7 +53,7 @@
                         Mã booking
                     </td>
                     <td>
-                        <span style="font-weight: bold; font-size: 20px; color: red;">PTT{{$detail->id}}</span>
+                        <span style="font-weight: bold; font-size: 20px; color: red;">NH{{$detail->id}}</span>
                     </td>
                 </tr>
                 <tr>

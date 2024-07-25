@@ -226,7 +226,7 @@
                     @endif
                     @if($item->booking_id)
                     <br>
-                    <i class="glyphicon glyphicon-off"></i><span style="color: red"> PTT{{ $item->booking_id }}</span>
+                    <i class="glyphicon glyphicon-off"></i><span style="color: red"> NH{{ $item->booking_id }}</span>
                     @endif
                     <br>
                     <i class="  glyphicon glyphicon-usd"></i>{{ number_format($item->amount) }} x {{ number_format($item->price) }} = {{ number_format($item->total_money) }}

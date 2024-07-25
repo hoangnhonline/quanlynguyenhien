@@ -88,7 +88,7 @@
               </div>               
                 <div class="row">
                   <div class="form-group col-md-6 col-xs-6">
-                    <label for="email">PTT CODE</label>
+                    <label for="email">NH CODE</label>
                     <input type="text" name="booking_id" class="form-control" value="{{ old('booking_id',  $detail->booking_id) }}" autocomplete="off">
                   </div>
                   <div class="tinh-toan" >

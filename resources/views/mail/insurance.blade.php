@@ -166,7 +166,7 @@
             @foreach($booking->customers as $customer)
                 <tr>
                     <td style="padding: 10px">{{$i+1 < 10 ? '0' . ($i+1) : $i+1}}</td>
-                    <td style="color: #4b7dc5; padding: 10px">PTT{{$booking->id}}</td>
+                    <td style="color: #4b7dc5; padding: 10px">NH{{$booking->id}}</td>
                     <td style="text-align: left; padding: 10px;">{{$customer['name']}}</td>
                     <td style="padding: 10px">{{$customer['yob']}}</td>
                     <td style="padding: 10px">30 Triệu</td>
