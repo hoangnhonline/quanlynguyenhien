@@ -37,24 +37,6 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-$file = fopen("aaa.txt", "r") or exit("Unable to open file!");
-
-while(!feof($file)) {
-   $a =  fgets($file);
-   $tmp = explode('|', $a);
-   $count = count($tmp);
-
-   if($count > 0){
-   		$email = $tmp[4];
-	   $pass = str_replace("\r\n", "", $tmp[5]);
-	   echo $email."|".$pass;
-	   echo "<br>";	
-   }
-   
-}
-
-fclose($file);
-dd('1111');
 /*
 |--------------------------------------------------------------------------
 | Run The Application
